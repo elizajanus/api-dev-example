@@ -1,19 +1,39 @@
 const router = require("express").Router();
-const location = require("../../controllers/locationsController");
+var models  = require('../../models');
 
 router
   .route("/")
-  .get(location.findAll)
-  .post(location.create);
-
-router
-  .route("/:customer_id")
-  .get(location.findActiveCustomerEntries)
+  .get(function(req,res) {
+    models.Location.findAll({
+    order:[['createdAt', 'DESC']]
+  }).then(location => {return res.json(location)})
+})
+  .post(function(req,res) {
+    models.Location.create(req.body).then(location => {return res.json(location)})
+    .catch(err => res.status(422).json(err))
+  })
 
 router
   .route("/:location_id")
-  .delete(location.makeInactive)
-  // .get(location.findOne)
-  .put(location.update); 
+  .delete(function(req,res) {
+    models.Location.update( 
+      { active: false },
+      { where: { id: req.params.location_id } })
+      .then(location => {return res.json(location)})
+      .catch(err => res.status(422).json(err))
+  })
+  .get(function(req,res) {
+    models.Location.findOne({
+     where: { id: req.params.location_id }
+  }).then(location => {return res.json(location)})
+  .catch(err => res.status(422).json(err))
+  })
+  .put(function(req,res) {
+    models.Location.update( 
+    req.body,
+    { where: { id: req.params.location_id } })
+    .then(location => {return res.json(location)})
+    .catch(err => res.status(422).json(err))
+  })
 
 module.exports = router;

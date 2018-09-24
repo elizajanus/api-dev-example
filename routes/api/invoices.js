@@ -1,19 +1,39 @@
 const router = require("express").Router();
-const invoice = require("../../controllers/invoicesController");
+var models  = require('../../models');
 
 router
   .route("/")
-  .get(invoice.findAll)
-  .post(invoice.create);
-
-router
-  .route("/:customer_id")
-  .get(invoice.findActiveCustomerEntries);
+  .get(function(req,res) {
+    models.RateOutput.findAll({
+    order:[['createdAt', 'DESC']]
+  }).then(invoices => {return res.json(invoices)})
+})
+  .post(function(req,res) {
+    models.RateOutput.create(req.body).then(invoice => {return res.json(invoice)})
+    .catch(err => res.status(422).json(err))
+  })
 
 router
   .route("/:output_id")
-  .delete(invoice.makeInactive)
-  // .get(invoice.findOne)
-  .put(invoice.update);
+  .delete(function(req,res) {
+    models.RateOutput.update( 
+      { active: false },
+      { where: { id: req.params.output_id } })
+      .then(invoice => {return res.json(invoice)})
+      .catch(err => res.status(422).json(err))
+  })
+  .get(function(req,res) {
+    models.RateOutput.findOne({
+     where: { id: req.params.output_id }
+  }).then(invoice => {return res.json(invoice)})
+  .catch(err => res.status(422).json(err))
+  })
+  .put(function(req,res) {
+    models.RateOutput.update( 
+    req.body,
+    { where: { id: req.params.output_id } })
+    .then(invoice => {return res.json(invoice)})
+    .catch(err => res.status(422).json(err))
+  })
 
 module.exports = router;

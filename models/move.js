@@ -1,44 +1,15 @@
 'use strict';
-
 module.exports = (sequelize, DataTypes) => {
-  const Move = sequelize.define('move', {
-    id: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    active: {
-      type: DataTypes.TINYINT(1),
-      defaultValue: 1,
-      allowNull: false
-    },
-    trip_id: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false,
-      references: {
-        model: 'trip',
-        key: 'id'
-      }
-    },
-    customer_id: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false,
-      references: {
-        model: 'customer',
-        key: 'id'
-      }
-    },
-    lane_id: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false,
-      references: {
-        model: 'lane',
-        key: 'id'
-      }
-    }
-  }, {
-    tableName: 'move'
-  });
+  const Move = sequelize.define('Move', {
+    active: DataTypes.TINYINT,
+    trip_id: DataTypes.INTEGER,
+    customer_id: DataTypes.INTEGER,
+    lane_id: DataTypes.INTEGER
+  }, {});
+  Move.associate = function(models) {
+    models.Move.belongsTo(models.Customer, {foreignKey: 'customer_id'});
+    models.Move.belongsTo(models.Trip, {foreignKey: 'trip_id'});
+    models.Move.belongsTo(models.Lane, {foreignKey: 'lane_id'});
+  };
   return Move;
 };

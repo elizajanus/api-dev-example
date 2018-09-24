@@ -1,22 +1,39 @@
 const router = require("express").Router();
-const move = require("../../controllers/movesController");
+var models  = require('../../models');
 
 router
   .route("/")
-  .get(move.findAll)
-  .post(move.create);
-
-router
-  .route("/:customer_id")
-  .get(move.findActiveCustomerEntries)
-//this should be done by query parameters
+  .get(function(req,res) {
+    models.Move.findAll({
+    order:[['createdAt', 'DESC']]
+  }).then(moves => {return res.json(moves)})
+})
+  .post(function(req,res) {
+    models.Move.create(req.body).then(move => {return res.json(move)})
+    .catch(err => res.status(422).json(err))
+  })
 
 router
   .route("/:move_id")
-  .delete(move.makeInactive)
-  // .get(move.findOne)
-  .put(move.update);  
-  //write a findOne method
-//patch method -- dynamic -- look into json patch
+  .delete(function(req,res) {
+    models.Move.update( 
+      { active: false },
+      { where: { id: req.params.move_id } })
+      .then(move => {return res.json(move)})
+      .catch(err => res.status(422).json(err))
+  })
+  .get(function(req,res) {
+    models.Move.findOne({
+     where: { id: req.params.move_id }
+  }).then(move => {return res.json(move)})
+  .catch(err => res.status(422).json(err))
+  })
+  .put(function(req,res) {
+    models.Move.update( 
+    req.body,
+    { where: { id: req.params.move_id } })
+    .then(move => {return res.json(move)})
+    .catch(err => res.status(422).json(err))
+  })
 
 module.exports = router;
