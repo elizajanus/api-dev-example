@@ -1,16 +1,16 @@
 module.exports = {
   apps: [{
-    name: 'api-aws-test',
+    name: 'example',
     script: './bin/www'
   }],
   deploy: {
     production: {
       user: 'ubuntu',
-      host: 'ec2-34-206-217-241.compute-1.amazonaws.com',
+      host: 'ec2-example.compute-1.amazonaws.com',
       key: '~/.ssh/server.pem',
       ref: 'origin/master',
-      repo: 'git@github.com:SocialAutoTransport/api-aws-test.git',
-      path: '/home/ubuntu/api-aws-test',
+      repo: 'git@github.com:example',
+      path: '/home/ubuntu/example',
       'post-deploy': 'npm install && pm2 startOrRestart ecosystem.config.js'
     }
   }
