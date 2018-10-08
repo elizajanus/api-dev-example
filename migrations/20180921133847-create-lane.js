@@ -24,14 +24,14 @@ module.exports = {
       origin_location_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'location',
+          model: 'Location',
           key: 'id'
         }
       },
       destination_location_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'location',
+          model: 'Location',
           key: 'id'
         }
       },

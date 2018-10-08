@@ -1,7 +1,9 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Lane = sequelize.define('Lane', {
-    active: DataTypes.TINYINT,
+    active: {
+      type: DataTypes.TINYINT,
+      defaultValue: true },
     customer_id: DataTypes.INTEGER,
     description: DataTypes.TEXT,
     origin_location_id: DataTypes.INTEGER,
@@ -16,9 +18,10 @@ module.exports = (sequelize, DataTypes) => {
     average_drive_speed: DataTypes.DECIMAL
   }, {});
   Lane.associate = function(models) {
-    models.Lane.belongsTo(models.Customer, {foreignKey: 'customer_id'});
-    models.Lane.belongsTo(models.Location, {foreignKey: 'origin_location_id'});
-    models.Lane.belongsTo(models.Location, {foreignKey: 'destination_location_id'});
+    models.Lane.belongsTo(models.Customer, { foreignKey: 'customer_id'});
+    models.Lane.belongsTo(models.Location, { as: 'pickup', foreignKey: 'origin_location_id'});
+    models.Lane.belongsTo(models.Location, { as: 'delivery', foreignKey: 'destination_location_id'});
+    models.Lane.hasMany(models.Move, { as: 'lane', foreignKey: 'lane_id'});
   };
   return Lane;
 };

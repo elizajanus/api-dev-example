@@ -1,7 +1,9 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const RateRule = sequelize.define('RateRule', {
-    active: DataTypes.TINYINT,
+    active: {
+      type: DataTypes.TINYINT,
+      defaultValue: true },
     customer_id: DataTypes.INTEGER,
     distance_start: DataTypes.INTEGER,
     distance_end: DataTypes.INTEGER,

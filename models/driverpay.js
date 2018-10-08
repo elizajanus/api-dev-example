@@ -1,7 +1,9 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const DriverPay = sequelize.define('DriverPay', {
-    active: DataTypes.TINYINT,
+    active: {
+      type: DataTypes.TINYINT,
+      defaultValue: true },
     region_code: DataTypes.STRING,
     average_driver_speed: DataTypes.DECIMAL,
     pay_per_kilometer: DataTypes.DECIMAL,

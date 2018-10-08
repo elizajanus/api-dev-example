@@ -8,6 +8,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      tookan_id: {
+        type: Sequelize.INTEGER
+      },
       active: {
         type: Sequelize.TINYINT
       },

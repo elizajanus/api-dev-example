@@ -5,6 +5,9 @@ router
   .route("/")
   .get(function(req,res) {
     models.RateOutput.findAll({
+      include: [
+        { all: true }
+     ],
     order:[['createdAt', 'DESC']]
   }).then(invoices => {return res.json(invoices)})
 })
@@ -24,7 +27,10 @@ router
   })
   .get(function(req,res) {
     models.RateOutput.findOne({
-     where: { id: req.params.output_id }
+     where: { id: req.params.output_id },
+     include: [
+      { all: true }
+   ]
   }).then(invoice => {return res.json(invoice)})
   .catch(err => res.status(422).json(err))
   })
