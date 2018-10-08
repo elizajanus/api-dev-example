@@ -44,48 +44,17 @@ const getTrips = () => {
    })
   }
 
-const syncTripWithTookan = async(data) => {
-  const trip = await getTripById(data.id);
-  const moves = trip.moves;
-  console.log(moves);
-  const createInTookan = async(moves) => {
-    //current challenge: async/await desont wait to return the trip object until moves have been created via external Tookan API call
-      if (moves[0].class === "base" && moves[1].class === "base") {
-          await Tookan.Tookan.createMove(moves[0], function(res) {
-          console.log(res);
-          console.log("move created")
-          return Move.Move.updateTookanIds(moves[0].id, res.data.data.pickups[0].job_token, res.data.data.pickups[0].job_id, res.data.data.deliveries[0].job_id)
-          //sync tookan_relationship_id in move record
-        })
-          await Tookan.Tookan.createMove(moves[1], function(res) {
-          console.log(res.data.data);
-          console.log("move created")
-          return Move.Move.updateTookanIds(moves[1].id, res.data.data.pickups[0].job_token, res.data.data.pickups[0].job_id, res.data.data.deliveries[0].job_id)
-          //sync tookan_relationship_id in move record
-        })
-      } else if (moves[0].class === "stranded") {
-          await Tookan.Tookan.createMove(moves[0], function(res) {
-          console.log(res.data.data)
-          console.log("move created")
-          return Move.Move.updateTookanIds(moves[0].id, res.data.data.pickups[0].job_token, res.data.data.pickups[0].job_id, res.data.data.deliveries[0].job_id)
-          //sync tookan_relationship_id in move record
-        })
-      }
-  }
-  return createInTookan(moves);
-}  
-
-const parseData = async(data) => {
+const parseData = async (data) => {
   //create trip, then add a trip id property to the data set
   let tripData = {
     customer_id: 1
   };
-//   //in the future, customer_id will be determined by api key
-  const newTrip = await createTrip(tripData); 
+  //in the future, customer_id will be determined by api key
+  const newTrip = await createTrip(tripData);
   data["id"] = newTrip.id;
   console.log(`id: ${newTrip.id}`);
-//  // for each move:
-//  // validate times
+  //  // for each move:
+  //  // validate times
   await Move.Move.validateTime(data);
 
   //sort moves by sequence
@@ -97,8 +66,8 @@ const parseData = async(data) => {
       await callback(array[index], index, array)
     }
   }
-  const processMoves = async() => {
-    await asyncForEach(data.moves, async(move, index, moves) => {
+  const processMoves = async () => {
+    await asyncForEach(data.moves, async (move, index, moves) => {
       //need function to determine if field exists
       if (move.lane.hasOwnProperty('id')) {
         let foundLane = await Lane.Lane.findLaneAndSet(move);
@@ -110,8 +79,8 @@ const parseData = async(data) => {
         //validate delivery location 
         await Location.Location.validateDeliveryLocation(move);
         //find lane by origin_location_id and destination_location_id, create a new lane if not found, if found set lane id
-    
-        await (async() => {
+
+        await (async () => {
           const lane = await Lane.Lane.handleLaneCreation(move.lane.pickup, move.lane.delivery, 1);
           if (lane !== null || lane !== undefined || lane.length !== 0) {
             move.lane.id = lane.id;
@@ -120,7 +89,7 @@ const parseData = async(data) => {
             console.log("lane creation unsuccessful")
           }
         })();
-        
+
         //create move in database
         let newMove = {
           sequence: move.sequence,
@@ -145,40 +114,36 @@ const parseData = async(data) => {
     })
   }
 
-const determineClassAndSync = async() => {
+  const determineClassAndSync = async() => {
 
-await asyncForEach(data.moves, async(move, index, moves) => {
-  //determine move classes
-  await Move.Move.determineMoveClass(move, index, moves);
-  await Move.Move.updateMoveClass(move.id, move.class);
-})  
+    await asyncForEach(data.moves, async (move, index, moves) => {
+      //determine move classes and move record
+      await Move.Move.determineMoveClass(move, index, moves);
+      await Move.Move.updateMoveClass(move.id, move.class);
+    })
 
-if (data.syncWithTookan === 1 || data.syncWithTookan === true) {
-  if (data.id === null || data.id === undefined) {
-    console.log("trip data not available");
-  } else {
-    //Sync with Tookan: 
-    //1. use move data to create moves in tookan
-    //2. extract tookan relationship id for each move and add to move record
-    console.log("syncing with Tookan");
-    await syncTripWithTookan(data)
-    const trip = await getTripById(data.id);
-    console.log(`returning trip ${trip.id}`)
+    await asyncForEach(data.moves, (move, index, moves) => {
+      //Sync with Tookan: 
+      //1. use move data to create moves in tookan
+      //2. extract tookan relationship id for each move and add to move record
+  
+      Tookan.Tookan.createTookanMove(moves[index], function(res) {
+          //sync tookan_relationship_id in move record
+          Move.Move.updateTookanIds(moves[index].id, res.data.data.pickups[0].job_token, res.data.data.pickups[0].job_id, res.data.data.deliveries[0].job_id)
+        })
+    })
+
+    const trip = getTripById(data.id);
+    console.log(`returning trip ${trip}`)
     return trip;
   }
-} else {
-  console.log("did not sync with Tookan");
-  const trip = await getTripById(data.id);
-  return trip;
-}
-
-}  
 
   await processMoves();
   const result = await determineClassAndSync()
   console.log(`result is ${result}`);
   return result;
 
-  }
+}
 
-module.exports = { getTrips, createTrip, getTripById, syncTripWithTookan, parseData }
+
+module.exports = { getTrips, createTrip, getTripById, parseData }
