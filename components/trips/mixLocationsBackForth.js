@@ -1,5 +1,4 @@
 let mixLocationsBackForth = {
-  syncWithTookan: 1,
   moves: [{
       sequence: 1,
       vehicle: {

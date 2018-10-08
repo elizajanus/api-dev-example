@@ -3,7 +3,6 @@ const Location = require('../locations');
 const Move = require('../moves');
 const Tookan = require('../tookan');
 const models  = require('../../models');
-// const data = require('./data')
 // const mixLocationsBackForth = require('./mixLocationsBackForth');
 
 const createTrip = (location) => {
@@ -114,7 +113,7 @@ const parseData = async (data) => {
     })
   }
 
-  const determineClassAndSync = async() => {
+  const determineClassAndSync = async () => {
 
     await asyncForEach(data.moves, async (move, index, moves) => {
       //determine move classes and move record
@@ -126,11 +125,11 @@ const parseData = async (data) => {
       //Sync with Tookan: 
       //1. use move data to create moves in tookan
       //2. extract tookan relationship id for each move and add to move record
-  
-      Tookan.Tookan.createTookanMove(moves[index], function(res) {
-          //sync tookan_relationship_id in move record
-          Move.Move.updateTookanIds(moves[index].id, res.data.data.pickups[0].job_token, res.data.data.pickups[0].job_id, res.data.data.deliveries[0].job_id)
-        })
+
+      Tookan.Tookan.createTookanMove(move, function (res) {
+        //sync tookan_relationship_id in move record
+        Move.Move.updateTookanIds(move.id, res.data.data.pickups[0].job_token, res.data.data.pickups[0].job_id, res.data.data.deliveries[0].job_id)
+      })
     })
 
     const trip = getTripById(data.id);

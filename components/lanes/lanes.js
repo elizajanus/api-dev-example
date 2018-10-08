@@ -40,36 +40,36 @@ const getLaneByLocations = (pickup_id, delivery_id) => {
   })
 }
 
-const handleLaneCreation = async(pickup, delivery, customer_id) => {
+const handleLaneCreation = async (pickup, delivery, customer_id) => {
   let lane = await getLaneByLocations(pickup.id, delivery.id);
   if (lane === null || lane === undefined || lane.length === 0) {
-        let newLane = {
-          customer_id: customer_id,
-          description: `${pickup.name} to ${delivery.name}`, //name of first location + to + name of second location
-          origin_location_id: pickup.id,
-          destination_location_id: delivery.id
-        };
-       lane = await createLane(newLane);
-       console.log(`new lane created with id ${lane.id}`)
-    }
-    let reverseLane = await getLaneByLocations(delivery.id, pickup.id);
-    if (reverseLane === null || reverseLane === undefined || reverseLane.length === 0) {
-        newReverseLane = {
-          customer_id: customer_id,
-          description: `${delivery.name} to ${pickup.name}`, //name of first location + to + name of second location
-          origin_location_id: delivery.id,
-          destination_location_id: pickup.id
-        };
-       reverseLane = await createLane(newReverseLane);
-       console.log(`new lane created with id ${reverseLane.id}`)
+    let newLane = {
+      customer_id: customer_id,
+      description: `${pickup.name} to ${delivery.name}`, //name of first location + to + name of second location
+      origin_location_id: pickup.id,
+      destination_location_id: delivery.id
+    };
+    lane = await createLane(newLane);
+    console.log(`new lane created with id ${lane.id}`)
+  }
+  let reverseLane = await getLaneByLocations(delivery.id, pickup.id);
+  if (reverseLane === null || reverseLane === undefined || reverseLane.length === 0) {
+    newReverseLane = {
+      customer_id: customer_id,
+      description: `${delivery.name} to ${pickup.name}`, //name of first location + to + name of second location
+      origin_location_id: delivery.id,
+      destination_location_id: pickup.id
+    };
+    reverseLane = await createLane(newReverseLane);
+    console.log(`new lane created with id ${reverseLane.id}`)
   }
   return lane;
 }
 
-const findLaneAndSet = async(move) => {
+const findLaneAndSet = async (move) => {
   let foundLane = await getLaneById(move.lane.id);
   //update to reflect new data structure
-  if(foundLane === null || foundLane === undefined || foundLane.length === 0) {
+  if (foundLane === null || foundLane === undefined || foundLane.length === 0) {
     console.log(`error: invalid lane id at move sequence ${move.sequence}. please retry your move request.`)
   } else {
     console.log(`lane found: ${foundLane.id}`)
@@ -77,4 +77,11 @@ const findLaneAndSet = async(move) => {
   }
 }
 
-  module.exports = { getLanes, createLane, getLaneById, getLaneByLocations, handleLaneCreation, findLaneAndSet };
+module.exports = {
+  getLanes,
+  createLane,
+  getLaneById,
+  getLaneByLocations,
+  handleLaneCreation,
+  findLaneAndSet
+};
