@@ -36,9 +36,8 @@ const getLocationByAddress = (address) => {
   })
 }
 
-const validatePickupLocation = async (move) => {
-  console.log("at least we're here")
-  if (move.lane.pickup.hasOwnProperty('id')) {
+const validatePickupLocation = async (move, customer_id) => {
+  if (move.lane.pickup.hasOwnProperty('id') && move.lane.pickup.id !== '') {
     let foundLocation = await getLocationById(move.lane.pickup.id);
     if (foundLocation === null || foundLocation === undefined || foundLocation.length === 0) {
       console.log(`error: invalid location id at location ${move.pickup.address}. please retry your move request.`)
@@ -57,20 +56,23 @@ const validatePickupLocation = async (move) => {
           if (res === null || res === undefined || res.length === 0) {
             //if no location found then create location record and set move.pickup.id
             //TODO: change to match data i.e. search by address1 and zip
+            // let loc = await Geocode.Geocode.Geocode(move.lane.pickup.address);
             let location = {
-              customer_id: 1,
-              name: move.lane.pickup.name,
+              customer_id: customer_id,
+              name: move.lane.pickup.address,
+              // address: loc.address.formattedAddress,
               address: move.lane.pickup.address,
               email: move.lane.pickup.email,
               phone: move.lane.pickup.phone
             };
             let newLocation = await createLocation(location);
             move.lane.pickup.address = newLocation.address;
-            move.lane.pickup.id = newLocation.id
+            move.lane.pickup.id = newLocation.id;
+            move.lane.pickup.name = newLocation.address;
             console.log(`new location with id ${newLocation.id} created.`);
           } else {
             move.lane.pickup.address = res.address;
-            move.lane.pickup.id = res.id
+            move.lane.pickup.id = res.id;
             console.log(`location found. location added to local object: ${res.id}`);
           }
         });
@@ -79,15 +81,14 @@ const validatePickupLocation = async (move) => {
 }
 
 
-const validateDeliveryLocation = async (move) => {
-  console.log("are we here though?")
-  if (move.lane.delivery.hasOwnProperty('id')) {
+const validateDeliveryLocation = async (move, customer_id) => {
+  if (move.lane.delivery.hasOwnProperty('id') && move.lane.delivery.id !== '') {
     let foundLocation = await getLocationById(move.lane.delivery.id);
     if (foundLocation === null || foundLocation === undefined || foundLocation.length === 0) {
       console.log(`error: invalid location id at location ${move.delivery.address}. please retry your move request.`)
     } else {
       move.lane.delivery.address = foundLocation.address;
-      move.lane.delivery.id = foundLocation.id
+      move.lane.delivery.id = foundLocation.id;
       console.log(`location found. location added to local object: ${foundLocation.id}`);
     }
   } else {
@@ -100,20 +101,23 @@ const validateDeliveryLocation = async (move) => {
           if (res === null || res === undefined || res.length === 0) {
             //if no location found then create location record and set move.pickup.id
             //TODO: change to match data i.e. search by address1 and zip
+            // let loc = await Geocode.Geocode.Geocode(move.lane.delivery.address);
             let location = {
-              customer_id: 1,
-              name: move.lane.delivery.name,
+              customer_id: customer_id,
+              name: move.lane.delivery.address,
+              // address: loc.address.formattedAddress,
               address: move.lane.delivery.address,
               email: move.lane.delivery.email,
               phone: move.lane.delivery.phone
             };
             let newLocation = await createLocation(location);
             move.lane.delivery.address = newLocation.address;
-            move.lane.delivery.id = newLocation.id
+            move.lane.delivery.id = newLocation.id;
+            move.lane.delivery.name = newLocation.name;
             console.log(`new location with id ${newLocation.id} created.`);
           } else {
             move.lane.delivery.address = res.address;
-            move.lane.delivery.id = res.id
+            move.lane.delivery.id = res.id;
             console.log(`location found. location added to local object: ${res.id}`);
           }
         });

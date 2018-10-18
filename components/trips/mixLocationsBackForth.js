@@ -1,4 +1,5 @@
 let mixLocationsBackForth = {
+  customer_id: 1,
   moves: [{
       sequence: 1,
       vehicle: {
@@ -14,11 +15,11 @@ let mixLocationsBackForth = {
       lane: {
         pickup: {
           id: 1,
-          time: "10/08/2018, 1:30 pm"
+          time: "10/08/2018, 7:30 pm"
         },
         delivery: {
           id: 3,
-          time: "10/08/2018, 2:00 pm"
+          time: "10/08/2018, 8:00 pm"
         }
       }
     },
@@ -40,11 +41,11 @@ let mixLocationsBackForth = {
           address: "8406 West Broad St,Richmond,VA,23294",
           email: "rob@socialautotransport.com",
           phone: "8042394505",
-          time: "10/08/2018, 2:30 pm"
+          time: "10/08/2018, 8:30 pm"
         },
         delivery: {
           id: 1,
-          time: "10/08/2018, 3:00 pm"
+          time: "10/08/2018, 9:00 pm"
         }
       }
     }

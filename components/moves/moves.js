@@ -50,7 +50,6 @@ const updateMoveClass = (id, move_class) => {
 }
 
 const validateTime = (data) => {
-  //this will be exanded upon in the future
   data.moves.forEach((move, index) => {
     if (move.lane.pickup.time === null || move.lane.pickup.time === undefined) {
       console.log(`error: no time specified at ${move.lane.pickup}`)

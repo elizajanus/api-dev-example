@@ -19,10 +19,10 @@ router
         res.status(422).json(err)
       })
   })
-// .post(function(req,res) {
-//   models.Move.create(req.body).then(move => {return res.json(move)})
-//   .catch(err => res.status(422).json(err))
-// })
+.post(function(req,res) {
+  moveMod.createMove(req.body).then(move => {return res.json(move)})
+  .catch(err => res.status(422).json(err))
+})
 
 router
   .route("/:move_id")

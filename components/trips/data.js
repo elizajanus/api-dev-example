@@ -1,4 +1,5 @@
-let BackForth = {
+let data = {
+  syncWithTookan: 1,
     moves: [
       {
         autoassign: false,
@@ -66,4 +67,4 @@ let BackForth = {
     }
     ]
   }
-  module.exports = BackForth;
+  module.exports = data;

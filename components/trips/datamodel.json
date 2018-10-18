@@ -1,0 +1,94 @@
+{
+  "start": 0,
+  "count": 0,
+  "totalCount": 0,
+  "items": [
+    {
+      "createdAt": "2018-10-01T20:34:10.780Z",
+      "updatedAt": "2018-10-01T20:34:10.780Z",
+      "id": 57,
+      "moves": [
+        {
+          "vehicle": {
+            "year": 2016,
+            "make": "Ford",
+            "model": "F-150",
+            "color": "Blue",
+            "stockNumber": "CL7245",
+            "vin": "1GCVKNEH8HZ366498"
+          },
+          "lane": {
+            "createdAt": "2018-10-01T20:34:10.781Z",
+            "updatedAt": "2018-10-01T20:34:10.781Z",
+            "laneId": 76,
+            "description": "string",
+            "originLocation": {
+              "createdAt": "2018-10-01T20:34:10.781Z",
+              "updatedAt": "2018-10-01T20:34:10.781Z",
+              "locationId": 7,
+              "name": "string",
+              "address": {
+                "address1": "string",
+                "address2": "string",
+                "city": "string",
+                "state": "string",
+                "zip": "string"
+              },
+              "email": "user@example.com",
+              "phone": "1-804-555-1212"
+            },
+            "destinationLocation": {
+              "createdAt": "2018-10-01T20:34:10.781Z",
+              "updatedAt": "2018-10-01T20:34:10.781Z",
+              "locationId": 7,
+              "name": "string",
+              "address": {
+                "address1": "string",
+                "address2": "string",
+                "city": "string",
+                "state": "string",
+                "zip": "string"
+              },
+              "email": "user@example.com",
+              "phone": "1-804-555-1212"
+            },
+            "distance": 10622,
+            "duration": 1080
+          },
+          "pickup": {
+            "createdAt": "2018-10-01T20:34:10.781Z",
+            "updatedAt": "2018-10-01T20:34:10.781Z",
+            "locationId": 7,
+            "name": "string",
+            "address": {
+              "address1": "string",
+              "address2": "string",
+              "city": "string",
+              "state": "string",
+              "zip": "string"
+            },
+            "email": "user@example.com",
+            "phone": "1-804-555-1212"
+          },
+          "delivery": {
+            "createdAt": "2018-10-01T20:34:10.781Z",
+            "updatedAt": "2018-10-01T20:34:10.781Z",
+            "locationId": 7,
+            "name": "string",
+            "address": {
+              "address1": "string",
+              "address2": "string",
+              "city": "string",
+              "state": "string",
+              "zip": "string"
+            },
+            "email": "user@example.com",
+            "phone": "1-804-555-1212"
+          },
+          "referenceNumber": "ID-123345",
+          "sequence": 1
+        }
+      ]
+    }
+  ]
+}

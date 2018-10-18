@@ -2,6 +2,7 @@ const router = require("express").Router();
 var models = require('../../models');
 const {Trip} = require('../../components');
 const tripMod = Trip.Trip;
+const moment = require('moment');
 
 router
   .route("/")
@@ -25,6 +26,28 @@ router
         res.status(422).json(err)
       })
   })
+
+ router
+  .route("/admin")
+  .get(function(req,res) {
+    let query = {}
+    if (req.query.id) {
+      query["id"] = req.query.id
+    } if (req.query.customer_id) {
+      query["customer_id"] = req.query.customer_id
+    } if (req.query.startDate && req.query.endDate) {
+      query["createdAt"] = {$between: [req.query.startDate, req.query.endDate]}
+    }
+    tripMod.adminGetTrips(query)
+    .then(trips => {
+      return res.json(trips)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(422).json(err)
+    })
+  })
+
 
 router
   .route("/:trip_id")

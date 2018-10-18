@@ -9,6 +9,8 @@ router
     let query = {}
     if (req.query.id) {
       query["id"] = req.query.id
+    } if (req.query.customer_id) {
+      query["customer_id"] = req.query.customer_id
     }
     locationMod.getLocations(query)
       .then(locations => {

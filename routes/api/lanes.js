@@ -14,6 +14,8 @@ router
     }
     if (req.query.id) {
       query["id"] = req.query.id
+    } if (req.query.customer_id) {
+      query["customer_id"] = req.query.customer_id
     }
     laneMod.getLanes(query)
       .then(lanes => {
